@@ -94,5 +94,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pencil.png" />
+    <Resource Include="Resources\plus.png" />
+    <Resource Include="Resources\unchecked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NoteApp.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
