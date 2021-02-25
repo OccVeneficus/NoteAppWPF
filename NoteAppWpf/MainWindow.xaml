@@ -21,8 +21,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MinWidth="228.57" MaxWidth="278.57"></ColumnDefinition>
-            <ColumnDefinition Width="2.5*"></ColumnDefinition>
+            <ColumnDefinition Width="1*" MinWidth="228.57" MaxWidth="278.57"/>
+            <ColumnDefinition Width="2.5*"/>
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2" IsMainMenu="True" Margin=" 8 0 0 0">
             <MenuItem Header="File">
@@ -45,10 +45,14 @@
             <ComboBox VerticalAlignment="Center" Width="Auto" Margin="0 6 0 2"></ComboBox>
         </DockPanel>
         <ListBox Grid.Row="2" Grid.Column="0" Grid.RowSpan="3" Margin="10 0 0 0 "></ListBox>
-        <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal" Margin="10 0 0 10" VerticalAlignment="Bottom">
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="{StaticResource Add}"/>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="{StaticResource Edit}"/>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="{StaticResource Remove}"/>
+        <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal" Margin="10 0 0 10"
+                    VerticalAlignment="Bottom">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    Content="{StaticResource Add}"/>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    Content="{StaticResource Edit}"/>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    Content="{StaticResource Remove}"/>
         </StackPanel>
         <Label Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="20 0  0 0"
                FontSize="26" FontWeight="DemiBold">
@@ -58,7 +62,8 @@
             <Label FontSize="12">Category:</Label>
             <Label FontSize="12">NoteCategoryName</Label>
         </DockPanel>
-        <StackPanel Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" Orientation="Horizontal">
+        <StackPanel Grid.Row="3" Grid.Column="1" Margin="10 0 0 0"
+                    Orientation="Horizontal">
             <Label>Created:</Label>
             <DatePicker></DatePicker>
             <Label>Modified:</Label>
