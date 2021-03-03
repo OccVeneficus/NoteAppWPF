@@ -20,11 +20,20 @@ namespace NoteAppWpf.ViewModel
             this.canExecute = canExecute;
         }
 
+        /// <summary>
+        /// Определяет, может ли команда выполнятся
+        /// </summary>
+        /// <param name="parameter">команда</param>
+        /// <returns></returns>
         public bool CanExecute(object parameter)
         {
             return this.canExecute == null || this.canExecute(parameter);
         }
 
+        /// <summary>
+        /// Действия команды
+        /// </summary>
+        /// <param name="parameter">команда</param>
         public void Execute(object parameter)
         {
             this.execute(parameter);

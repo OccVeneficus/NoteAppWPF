@@ -5,6 +5,7 @@
     /// </summary>
     public enum NoteCategory
     {
+        All,
         Work,
         Home,
         HealthAndSport,

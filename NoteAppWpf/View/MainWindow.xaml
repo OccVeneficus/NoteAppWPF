@@ -49,10 +49,10 @@
             </Label>
             <ComboBox VerticalAlignment="Center" Width="Auto" Margin="0 6 0 2" 
                       ItemsSource="{Binding NoteCategories}"
-                      />
+                      SelectedItem="{Binding SelectedCategory}"/>
         </DockPanel>
         <ListBox x:Uid="notesListBox" Grid.Row="2" Grid.Column="0" Grid.RowSpan="3" Margin="10 0 0 0 "
-                 ItemsSource="{Binding  Project.Notes}" SelectedItem="{Binding Project.CurrentNote}">
+                 ItemsSource="{Binding  SelectedNotes}" SelectedItem="{Binding Project.CurrentNote}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=Name}"></TextBlock>

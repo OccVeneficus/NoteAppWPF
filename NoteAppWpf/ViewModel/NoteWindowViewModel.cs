@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using NoteApp;
 using NoteApp.Annotations;
@@ -23,7 +21,18 @@ namespace NoteAppWpf.ViewModel
         public Note Note { get; set; }
 
         private readonly List<NoteCategory> _noteCategories = Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
-        public List<NoteCategory> NoteCategories => _noteCategories;
+
+        /// <summary>
+        /// Категории, доступные для выбора в качестве категории заметки
+        /// </summary>
+        public List<NoteCategory> NoteCategories
+        {
+            get
+            {
+                _noteCategories.Remove(NoteCategory.All);
+                return _noteCategories;
+            }
+        }
 
         public NoteWindowViewModel(Note note)
         {

@@ -4,9 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using NoteApp;
 using NoteApp.Annotations;
 
@@ -16,13 +13,41 @@ namespace NoteAppWpf.ViewModel
     {
         private Project _project;
 
+        /// <summary>
+        /// Лист категорий для ComboBox
+        /// </summary>
         private readonly List<NoteCategory> _noteCategories = Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
-
-        private AboutWindowViewModel _aboutWindowViewModel;
-        private NoteWindowViewModel _noteWindowViewModel;
 
         public  List<NoteCategory> NoteCategories => _noteCategories;
 
+        /// <summary>
+        /// VM для окна About
+        /// </summary>
+        private AboutWindowViewModel _aboutWindowViewModel;
+
+        /// <summary>
+        /// VM для окна Note
+        /// </summary>
+        private NoteWindowViewModel _noteWindowViewModel;
+
+        private ObservableCollection<Note> _selectedNotes;
+
+        public ObservableCollection<Note> SelectedNotes
+        {
+            get
+            {
+                return _selectedNotes;
+            }
+            set
+            {
+                _selectedNotes = value;
+                OnPropertyChanged(nameof(SelectedNotes));
+            }
+        }
+
+        /// <summary>
+        /// Свойство для хранения экземпляра проекта
+        /// </summary>
         public Project Project
         {
             get
@@ -38,10 +63,37 @@ namespace NoteAppWpf.ViewModel
 
         public ApplicationViewModel()
         {
+            //Project = new Project();
             Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+            SelectedCategory = NoteCategory.All;
+        }
+        
+        /// <summary>
+        /// Поле для хранения выбранной категории в ComboBox
+        /// </summary>
+        private NoteCategory _selectedCategory;
+
+        public NoteCategory SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set
+            {
+                if (value != NoteCategory.All)
+                {
+                    SelectedNotes = Project.SortNotesByModifiedDate(Project.Notes, value);
+                }
+                else
+                {
+                    SelectedNotes = Project.Notes;
+                }
+                _selectedCategory = value;
+            }
         }
 
+        /// <summary>
+        /// Команда добавления новой записки
+        /// </summary>
         private RelayCommand _addCommand;
 
         public RelayCommand AddCommand
@@ -56,7 +108,8 @@ namespace NoteAppWpf.ViewModel
                                if (_noteWindowViewModel.DialogResult.Equals(true))
                                {
                                    _project.Notes.Add(newNote);
-                                   Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+                                   SelectedCategory = _selectedCategory;
+                                   //Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
                                    ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
                                }
                            }
@@ -64,6 +117,9 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        /// <summary>
+        /// Команда для удаления записи
+        /// </summary>
         private RelayCommand _removeCommand;
 
         public RelayCommand RemoveCommand
@@ -77,7 +133,8 @@ namespace NoteAppWpf.ViewModel
                            if (note != null)
                            {
                                _project.Notes.Remove(note);
-                               Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+                               SelectedCategory = _selectedCategory;
+                               //Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
                                ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
                            }
 
@@ -89,6 +146,9 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        /// <summary>
+        /// Команда для редактирования записи
+        /// </summary>
         private RelayCommand _editCommand;
 
         public RelayCommand EditCommand
@@ -118,6 +178,9 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        /// <summary>
+        /// Команда для показа окна "О программе"
+        /// </summary>
         private RelayCommand _aboutWindowCommand;
 
         public RelayCommand AboutWindowCommand
@@ -132,6 +195,11 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        /// <summary>
+        /// Обработчик закрытия приложения
+        /// </summary>
+        /// <param name="sender">главное окно приложения</param>
+        /// <param name="e">аргументы</param>
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);

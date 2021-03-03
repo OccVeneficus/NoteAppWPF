@@ -10,10 +10,10 @@ namespace NoteAppWpf.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        //TODO: Combobox logic
+        //TODO: Combobox logic (done(?))
         //TODO: Exit menu button
         //TODO: MessageBoxes with are you sure stuff
-        //TODO: XML
+        //TODO: XML (done(?))
         public MainWindow()
         {
             InitializeComponent();
