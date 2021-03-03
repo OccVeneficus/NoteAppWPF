@@ -1,13 +1,16 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using NoteApp.Annotations;
 
 namespace NoteApp
 {
     /// <summary>
-    /// Класс заметки, хранящий ее название, категорю, текст, дату создания и последнего
+    /// Класс заметки, хранящий ее название, категорию, текст, дату создания и последнего
     /// изменения
     /// </summary>
-    public class Note : ICloneable
+    public class Note : ICloneable, INotifyPropertyChanged
     {
         /// <summary>
         /// Название заметки
@@ -31,14 +34,28 @@ namespace NoteApp
                 }
     
                 _name = value;
-                ModifidedDate = DateTime.Now;
+                ModifiedDate = DateTime.Now;
+                OnPropertyChanged(nameof(Name));
             }
         }
-    
+
+        private string _text;
+
         /// <summary>
         /// Задает/возвращает текст заметки
         /// </summary>
-        public string Text { get; set; }
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                OnPropertyChanged(nameof(Text));
+            }
+        }
     
         /// <summary>
         /// Категория заметки
@@ -57,7 +74,8 @@ namespace NoteApp
             set
             {
                 _category = value;
-                ModifidedDate = DateTime.Now;
+                ModifiedDate = DateTime.Now;
+                OnPropertyChanged(nameof(Category));
             }
         }
     
@@ -69,18 +87,29 @@ namespace NoteApp
         /// <summary>
         /// Возвращает дату создания заметки
         /// </summary>
-        public DateTime CreatedDate { get; private set; }
+        public DateTime CreatedDate { get; private set ; }
     
         /// <summary>
         /// Дата последнего изменения заметки
         /// </summary>
         private DateTime _modifiedDate;
-    
+
         /// <summary>
         /// Возвращает дату последнего изменения параметров заметки
         /// </summary>
-    
-        public DateTime ModifidedDate { get; set; }
+
+        public DateTime ModifiedDate
+        {
+            get
+            {
+                return _modifiedDate;
+            }
+            set
+            {
+                _modifiedDate = value;
+                OnPropertyChanged(nameof(ModifiedDate));
+            }
+        }
     
         /// <summary>
         /// Реализация интерфейса IClone
@@ -88,7 +117,7 @@ namespace NoteApp
         /// <returns>Возвращает новый экземпляр-копию текущего объекта</returns>
         public object Clone()
         {
-            var noteClone = new Note(this.CreatedDate, this.ModifidedDate,
+            var noteClone = new Note(this.CreatedDate, this.ModifiedDate,
                 this.Name, this.Text, this.Category);
             return noteClone;
         }
@@ -105,12 +134,19 @@ namespace NoteApp
         public Note(DateTime createdDate, DateTime modifiedDate, string name,
             string text, NoteCategory category)
         {
-            this.CreatedDate = createdDate;
-            this.ModifidedDate = modifiedDate;
-            this.Name = name;
-            this.Text = text;
-            this.Category = category;
+            CreatedDate = createdDate;
+            Name = name;
+            Text = text;
+            Category = category;
+            ModifiedDate = modifiedDate;
         }
-    
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

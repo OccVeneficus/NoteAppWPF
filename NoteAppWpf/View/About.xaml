@@ -1,13 +1,13 @@
-﻿<Window x:Class="NoteAppWpf.About"
+﻿<Window x:Class="NoteAppWpf.View.About"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NoteAppWpf"
+        xmlns:local="clr-namespace:NoteAppWpf.View"
         mc:Ignorable="d"
         Title="About" MaxHeight="450" MaxWidth="550"
         MinHeight="450" MinWidth="550"
-        Height="450" Width="550">
+        Height="450" Width="550" Icon="../Resources/NoteApp.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>

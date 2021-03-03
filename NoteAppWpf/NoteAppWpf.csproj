@@ -55,32 +55,37 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="About.xaml">
+    <Page Include="View\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="About.xaml.cs">
+    <Compile Include="ViewModel\AboutWindowViewModel.cs" />
+    <Compile Include="ViewModel\ApplicationViewModel.cs" />
+    <Compile Include="ViewModel\ButtonHelper.cs" />
+    <Compile Include="ViewModel\NoteWindowViewModel.cs" />
+    <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NoteWindow.xaml">
+    <Page Include="View\NoteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NoteWindow.xaml.cs">
+    <Compile Include="View\NoteWindow.xaml.cs">
       <DependentUpon>NoteWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -115,6 +120,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\NoteApp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NoteApp\NoteApp.csproj">
+      <Project>{29D7C2FD-55A3-4AA1-A3CF-BE8B58885930}</Project>
+      <Name>NoteApp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
