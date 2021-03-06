@@ -4,13 +4,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GalaSoft.MvvmLight.CommandWpf;
 using NoteApp;
 using NoteApp.Annotations;
 
 namespace NoteAppWpf.ViewModel
 {
+    /// <summary>
+    /// View Model главного окна
+    /// </summary>
     public class ApplicationViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Поле для хранения проекта
+        /// </summary>
         private Project _project;
 
         /// <summary>
@@ -19,6 +26,10 @@ namespace NoteAppWpf.ViewModel
         private readonly List<NoteCategory> _noteCategories = Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
         public  List<NoteCategory> NoteCategories => _noteCategories;
+
+        public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
+
+
 
         /// <summary>
         /// VM для окна About
@@ -67,8 +78,17 @@ namespace NoteAppWpf.ViewModel
             Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
             SelectedCategory = NoteCategory.All;
+            CloseWindowCommand = new RelayCommand<IClosable>(CloseWindow);
         }
-        
+
+        private void CloseWindow(IClosable window)
+        {
+            if (window != null)
+            {
+                window.Close();
+            }
+        }
+
         /// <summary>
         /// Поле для хранения выбранной категории в ComboBox
         /// </summary>
@@ -85,9 +105,9 @@ namespace NoteAppWpf.ViewModel
                 }
                 else
                 {
-                    SelectedNotes = Project.Notes;
+                    SelectedNotes = Project.SortNotesByModifiedDate(Project.Notes);
+                    _selectedCategory = value;
                 }
-                _selectedCategory = value;
             }
         }
 
@@ -172,6 +192,7 @@ namespace NoteAppWpf.ViewModel
                             _project.CurrentNote.ModifiedDate = DateTime.Now;
                             _project.CurrentNote.Category = _noteWindowViewModel.Note.Category;
                             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+                            SelectedCategory = _selectedCategory;
                             ProjectManager.SaveToFile(Project,ProjectManager.DefaultFilePath);
                         }
                     }));

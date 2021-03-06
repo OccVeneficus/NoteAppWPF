@@ -8,12 +8,12 @@ namespace NoteAppWpf.View
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window,IClosable
     {
-        //TODO: Combobox logic (done(?))
-        //TODO: Exit menu button
-        //TODO: MessageBoxes with are you sure stuff
+        //TODO: MessageBoxes "with are you sure" stuff
         //TODO: XML (done(?))
+        //TODO: Validation
+
         public MainWindow()
         {
             InitializeComponent();

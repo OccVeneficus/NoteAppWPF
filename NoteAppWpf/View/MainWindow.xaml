@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NoteAppWpf"
         mc:Ignorable="d"
+        x:Name="MainAppWindow"
         Title="NoteApp" Height="550" Width="900" Icon="/Resources/NoteApp.ico">
     <Window.Resources>
         <Image x:Key="Edit" Source="../Resources/pencil.png" Width="16" Height="16"/>
@@ -26,7 +27,8 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2" IsMainMenu="True" Margin=" 8 0 0 0">
             <MenuItem Header="File">
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                          CommandParameter="{Binding ElementName=MainAppWindow}"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Add Note" Command="{Binding AddCommand}"></MenuItem>
@@ -41,7 +43,7 @@
         </Menu>
         <TextBox Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Margin="10"
                     DataContext="{Binding Project.CurrentNote}" Text="{Binding Text}"
-                    IsReadOnly="True" TextWrapping="WrapWithOverflow" HorizontalScrollBarVisibility="Visible">
+                    IsReadOnly="True" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Visible">
         </TextBox>
         <DockPanel Grid.Row="1" Grid.Column="0" Margin="10 0 0 0">
             <Label Background="Transparent" Margin="0 9 3 5" FontSize="11">

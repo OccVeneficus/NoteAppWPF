@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using NoteApp.Annotations;
 using NoteAppWpf.View;
 
 namespace NoteAppWpf.ViewModel
 {
+    /// <summary>
+    /// View Model окна About
+    /// </summary>
     public class AboutWindowViewModel : INotifyPropertyChanged
     {
         private Window _aboutWindow;

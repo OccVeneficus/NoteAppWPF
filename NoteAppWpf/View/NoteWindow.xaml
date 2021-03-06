@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NoteAppWpf"
+        xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
         xmlns:my="clr-namespace:NoteAppWpf.ViewModel"
         mc:Ignorable="d"
         Title="NoteWindow" Height="450" Width="800">
@@ -19,7 +20,12 @@
             <TextBlock Margin="20 10 15 0">
                 Title:
             </TextBlock>
-            <TextBox Margin="20 8 20 0" Text="{Binding Note.Name}" />
+            <TextBox Margin="20 8 20 0"
+                     Text="{Binding NewNoteTitle,
+                     ValidatesOnNotifyDataErrors=True,
+                     NotifyOnValidationError=True,
+                     Mode=TwoWay}">
+            </TextBox>
         </DockPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBlock Margin="20 10 9 0">
@@ -46,7 +52,7 @@
         <TextBox Grid.Row="3" Margin="20 20 20 10" Text="{Binding Note.Text}"></TextBox>
         <StackPanel Grid.Row="4" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 20 0">
             <Button Margin="5 0 0 5" Height="18" Width="40"
-                    my:ButtonHelper.DialogResult="True">OK</Button>
+                    my:ButtonHelper.DialogResult="True" Command="{Binding OkCommand}">OK</Button>
             <Button Margin="5 0 0 5" Height="18" Width="40"
                     my:ButtonHelper.DialogResult="False">Cancel</Button>
         </StackPanel>
