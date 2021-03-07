@@ -82,7 +82,6 @@
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ButtonHelper.cs" />
     <Compile Include="ViewModel\IClosable.cs" />
-    <Compile Include="ViewModel\NoteNameLengthRule.cs" />
     <Compile Include="ViewModel\NoteWindowViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ValidationError.cs" />

@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 
 namespace NoteAppWpf.ViewModel
@@ -55,7 +51,6 @@ namespace NoteAppWpf.ViewModel
             var worker = new BackgroundWorker();
             worker.DoWork += (o, e) =>
             {
-                Thread.Sleep(4000);
                 e.Result = ValidatePropertySpecialized(propertyName);
             };
             worker.RunWorkerCompleted += (o, e) =>
@@ -69,7 +64,7 @@ namespace NoteAppWpf.ViewModel
 
         private void RaiseErrorsChanged(string propertyName)
         {
-            ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
             if (PropertyDependencies.ContainsKey(propertyName))
             {
                 foreach (var item in PropertyDependencies[propertyName])
@@ -77,11 +72,6 @@ namespace NoteAppWpf.ViewModel
                     ValidateProperty(item);
                 }
             }
-        }
-
-        private void OnErrorsChanged(string propertyName)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         protected abstract IEnumerable<string> ValidatePropertySpecialized(string propertyName);

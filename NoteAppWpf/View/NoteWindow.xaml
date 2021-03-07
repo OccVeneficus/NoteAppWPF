@@ -21,10 +21,19 @@
                 Title:
             </TextBlock>
             <TextBox Margin="20 8 20 0"
-                     Text="{Binding NewNoteTitle,
-                     ValidatesOnNotifyDataErrors=True,
-                     NotifyOnValidationError=True,
-                     Mode=TwoWay}">
+                     Name="TitleTextBox">
+                <TextBox.Text>
+                    <Binding Path="NewNoteTitle"
+                             ValidatesOnNotifyDataErrors="True"
+                             ValidatesOnDataErrors="True"
+                             ValidatesOnExceptions="True"
+                             NotifyOnValidationError="True"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
             </TextBox>
         </DockPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -49,12 +58,25 @@
                         Text="{Binding Note.ModifiedDate}"
                         IsEnabled="False"></DatePicker>
         </StackPanel>
-        <TextBox Grid.Row="3" Margin="20 20 20 10" Text="{Binding Note.Text}"></TextBox>
-        <StackPanel Grid.Row="4" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 20 0">
+        <TextBox Grid.Row="3" Margin="20 20 20 10"
+                 Text="{Binding Note.Text}"
+                 TextWrapping="Wrap"></TextBox>
+        <StackPanel Grid.Row="4" HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Margin="0 0 20 0">
+            <Button Margin="5 0 0 5"
+                    Height="18"
+                    Width="40"
+                    Command="{Binding OkCommand}"
+                    CommandParameter="{Binding Path=(Validation.HasError),
+                ElementName=TitleTextBox, Mode=OneWay}"
+                    Content="OK">
+            </Button>
             <Button Margin="5 0 0 5" Height="18" Width="40"
-                    my:ButtonHelper.DialogResult="True" Command="{Binding OkCommand}">OK</Button>
-            <Button Margin="5 0 0 5" Height="18" Width="40"
-                    my:ButtonHelper.DialogResult="False">Cancel</Button>
+                     Content="Cancel"
+                    Command="{Binding CancelCommand}" IsCancel="True">
+
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

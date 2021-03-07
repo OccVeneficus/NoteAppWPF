@@ -74,7 +74,6 @@ namespace NoteAppWpf.ViewModel
 
         public ApplicationViewModel()
         {
-            //Project = new Project();
             Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
             SelectedCategory = NoteCategory.All;

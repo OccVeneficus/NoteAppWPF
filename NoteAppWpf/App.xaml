@@ -7,7 +7,7 @@
 
     <Application.Resources>
         <ControlTemplate x:Key="ValidationErrorTemplate">
-            <Border BorderBrush="LightSalmon" BorderThickness="2">
+            <Border BorderBrush="Red" BorderThickness="2">
                 <AdornedElementPlaceholder />
             </Border>
         </ControlTemplate>

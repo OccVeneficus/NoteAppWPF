@@ -10,10 +10,6 @@ namespace NoteAppWpf.View
     /// </summary>
     public partial class MainWindow : Window,IClosable
     {
-        //TODO: MessageBoxes "with are you sure" stuff
-        //TODO: XML (done(?))
-        //TODO: Validation
-
         public MainWindow()
         {
             InitializeComponent();
