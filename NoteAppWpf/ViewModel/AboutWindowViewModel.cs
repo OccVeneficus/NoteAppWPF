@@ -1,27 +1,22 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using GalaSoft.MvvmLight;
 using NoteApp.Annotations;
-using NoteAppWpf.View;
 
 namespace NoteAppWpf.ViewModel
 {
     /// <summary>
     /// View Model окна About
     /// </summary>
-    public class AboutWindowViewModel : INotifyPropertyChanged
+    public class AboutWindowViewModel : ViewModelBase,INotifyPropertyChanged
     {
-        private Window _aboutWindow;
+        private IWindowServise _windowServise;
 
-        public Window AboutWindow
+        public AboutWindowViewModel(IWindowServise windowServise)
         {
-            get;
-        }
-
-        public AboutWindowViewModel()
-        {
-            _aboutWindow = new About();
-            _aboutWindow.ShowDialog();
+            _windowServise = windowServise;
+            _windowServise.ShowDialog("AboutWindow",this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

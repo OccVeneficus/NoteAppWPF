@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using NoteAppWpf.ViewModel;
 
 namespace NoteAppWpf.View
@@ -13,7 +11,7 @@ namespace NoteAppWpf.View
         public MainWindow()
         {
             InitializeComponent();
-            ApplicationViewModel viewModel = new ApplicationViewModel();
+            ApplicationViewModel viewModel = new ApplicationViewModel(new MessageBoxServise(), new WindowServise());
             DataContext = viewModel;
             Closing += viewModel.OnWindowClosing;
         }

@@ -29,8 +29,6 @@ namespace NoteAppWpf.ViewModel
 
         public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
 
-
-
         /// <summary>
         /// VM для окна About
         /// </summary>
@@ -72,14 +70,24 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        public ApplicationViewModel()
+        private readonly IWindowServise _windowServise;
+
+        private readonly IMessageBoxServise _messageBoxServise;
+
+        public ApplicationViewModel(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
         {
+            _windowServise = windowServise;
+            _messageBoxServise = messageBoxServise;
             Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
             SelectedCategory = NoteCategory.All;
             CloseWindowCommand = new RelayCommand<IClosable>(CloseWindow);
         }
 
+        /// <summary>
+        /// Метод для закрытия главного окна
+        /// </summary>
+        /// <param name="window">окно для закрытия</param>
         private void CloseWindow(IClosable window)
         {
             if (window != null)
@@ -122,13 +130,16 @@ namespace NoteAppWpf.ViewModel
                 return _addCommand ??
                        (_addCommand = new RelayCommand(obj =>
                            {
-                               Note newNote = new Note(DateTime.Now, DateTime.Now, "New note","",NoteCategory.Other);
-                               _noteWindowViewModel = new NoteWindowViewModel(newNote);
+                               Note newNote = new Note(DateTime.Now, DateTime.Now,
+                                   "New note","",NoteCategory.Other);
+
+                               _noteWindowViewModel = new NoteWindowViewModel
+                                   (newNote, _messageBoxServise, _windowServise);
+
                                if (_noteWindowViewModel.DialogResult.Equals(true))
                                {
                                    _project.Notes.Add(newNote);
                                    SelectedCategory = _selectedCategory;
-                                   //Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
                                    ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
                                }
                            }
@@ -153,7 +164,6 @@ namespace NoteAppWpf.ViewModel
                            {
                                _project.Notes.Remove(note);
                                SelectedCategory = _selectedCategory;
-                               //Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
                                ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
                            }
 
@@ -181,7 +191,8 @@ namespace NoteAppWpf.ViewModel
                         if (note != null)
                         {
                             Note newNote = (Note)note.Clone();
-                            _noteWindowViewModel = new NoteWindowViewModel(newNote);
+                            _noteWindowViewModel = new NoteWindowViewModel
+                                (newNote, _messageBoxServise, _windowServise);
                         }
 
                         if (_noteWindowViewModel.DialogResult.Equals(true))
@@ -210,7 +221,7 @@ namespace NoteAppWpf.ViewModel
                 return _aboutWindowCommand ?? (
                     _aboutWindowCommand = new RelayCommand(obj =>
                     {
-                        _aboutWindowViewModel = new AboutWindowViewModel();
+                        _aboutWindowViewModel = new AboutWindowViewModel(_windowServise);
                     }));
             }
         }

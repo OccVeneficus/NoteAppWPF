@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="View\WindowServise.cs" />
     <Page Include="View\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -82,10 +83,12 @@
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ButtonHelper.cs" />
     <Compile Include="ViewModel\IClosable.cs" />
+    <Compile Include="ViewModel\IMessageBoxServise.cs" />
+    <Compile Include="ViewModel\IWindowServise.cs" />
+    <Compile Include="ViewModel\MyMessageBoxButton.cs" />
+    <Compile Include="ViewModel\MyMessageBoxImage.cs" />
     <Compile Include="ViewModel\NoteWindowViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
-    <Compile Include="ViewModel\ValidationError.cs" />
-    <Compile Include="ViewModel\ViewModelNotifyDataError.cs" />
     <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
@@ -103,6 +106,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="View\MessageBoxServise.cs" />
     <Compile Include="View\NoteWindow.xaml.cs">
       <DependentUpon>NoteWindow.xaml</DependentUpon>
     </Compile>

@@ -74,7 +74,8 @@
             </Button>
             <Button Margin="5 0 0 5" Height="18" Width="40"
                      Content="Cancel"
-                    Command="{Binding CancelCommand}" IsCancel="True">
+                     Command="{Binding CancelCommand}"
+                     IsCancel="True">
 
             </Button>
         </StackPanel>

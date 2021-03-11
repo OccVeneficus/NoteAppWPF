@@ -6,23 +6,34 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
 using NoteApp;
 using NoteApp.Annotations;
-using NoteAppWpf.View;
 
 namespace NoteAppWpf.ViewModel
 {
     /// <summary>
     /// VM окна редактирования заметки
     /// </summary>
-    public class NoteWindowViewModel : INotifyDataErrorInfo,INotifyPropertyChanged
+    public class NoteWindowViewModel : ViewModelBase,INotifyDataErrorInfo,INotifyPropertyChanged
     {
-        private Window _window;
+        private Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
+            new Dictionary<MyMessageBoxButton, MessageBoxButton>
+        {
+            {MyMessageBoxButton.OK, MessageBoxButton.OK}
+        };
+
+        private Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages = 
+            new Dictionary<MyMessageBoxImage, MessageBoxImage>
+        {
+            {MyMessageBoxImage.Warning, MessageBoxImage.Warning}
+        };
 
         /// <summary>
         /// Словарь для хранения ошибок проверки свойств 
         /// </summary>
-        private readonly Dictionary<string, List<string>> _errorsByPropertyName = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _errorsByPropertyName =
+            new Dictionary<string, List<string>>();
 
         private Note _note;
 
@@ -57,7 +68,8 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        private readonly List<NoteCategory> _noteCategories = Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
+        private readonly List<NoteCategory> _noteCategories = 
+            Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
         /// <summary>
         /// Категории, доступные для выбора в качестве категории заметки
@@ -71,10 +83,17 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        public NoteWindowViewModel(Note note)
+        private readonly IMessageBoxServise _messageBoxServise;
+
+        private readonly IWindowServise _windowServise;
+
+        public NoteWindowViewModel(Note note, IMessageBoxServise messageBoxServise, IWindowServise windowServise)
         {
+
             Note = note;
             NewNoteTitle = note.Name;
+            _messageBoxServise = messageBoxServise;
+            _windowServise = windowServise;
             ShowDialogWindow();
         }
 
@@ -83,11 +102,10 @@ namespace NoteAppWpf.ViewModel
         /// </summary>
         public void ShowDialogWindow()
         {
-            _window = new NoteWindow(this);
-            _window.ShowDialog();
-            if (_window.DialogResult != null)
+            bool? dialogResult = _windowServise.ShowDialog("NoteWindow", this);
+            if (dialogResult != null)
             {
-                DialogResult = (bool)_window.DialogResult;
+                DialogResult = (bool) dialogResult;
             }
         }
 
@@ -113,7 +131,7 @@ namespace NoteAppWpf.ViewModel
                     _cancelCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(
                         () =>
                         {
-                            _window.DialogResult = false;
+                            _windowServise.SetDialogResult(false);
                         });
                 }
 
@@ -136,11 +154,15 @@ namespace NoteAppWpf.ViewModel
                         ValidateNoteName();
                         if (!HasErrors)
                         {
-                            if (_window != null) _window.DialogResult = true;
+                            _windowServise.SetDialogResult(true);
                         }
                         else
                         {
-                            MessageBox.Show("Wrong title size", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            _messageBoxServise.Show(
+                                "Wrong title size",
+                                "Validation Error",
+                                _messageBoxButtons[MyMessageBoxButton.OK],
+                                _messageBoxImages[MyMessageBoxImage.Warning]);
                         }
                     });
                 }

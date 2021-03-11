@@ -29,7 +29,9 @@
             </TextBlock>
             <TextBlock  FontSize="12" Margin="30 5 0 0">
                 GitHub: 
-                <Hyperlink NavigateUri="https://github.com/OccVeneficus">https://github.com/OccVeneficus</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/OccVeneficus">
+                    https://github.com/OccVeneficus
+                </Hyperlink>
             </TextBlock>
         </StackPanel>
         <TextBlock Grid.Row="1" Margin="10 0 0 10">
