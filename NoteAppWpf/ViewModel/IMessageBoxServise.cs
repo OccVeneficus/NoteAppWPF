@@ -14,6 +14,6 @@ namespace NoteAppWpf.ViewModel
         /// <param name="caption">Заголовок формы</param>
         /// <param name="button">Кнопки формы</param>
         /// <param name="image">Изображение на кнопке</param>
-        void Show(string message, string caption, MessageBoxButton button, MessageBoxImage image);
+        bool Show(string message, string caption, MessageBoxButton button, MessageBoxImage image);
     }
 }

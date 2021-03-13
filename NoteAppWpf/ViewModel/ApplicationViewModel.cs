@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using GalaSoft.MvvmLight.CommandWpf;
 using NoteApp;
 using NoteApp.Annotations;
@@ -147,6 +148,19 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        private Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
+            new Dictionary<MyMessageBoxButton, MessageBoxButton>
+            {
+                {MyMessageBoxButton.OK, MessageBoxButton.OK},
+                {MyMessageBoxButton.YesNo, MessageBoxButton.YesNo}
+            };
+
+        private Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages =
+            new Dictionary<MyMessageBoxImage, MessageBoxImage>
+            {
+                {MyMessageBoxImage.Warning, MessageBoxImage.Warning}
+            };
+
         /// <summary>
         /// Команда для удаления записи
         /// </summary>
@@ -159,6 +173,12 @@ namespace NoteAppWpf.ViewModel
                 return _removeCommand ??
                        (_removeCommand = new RelayCommand(obj =>
                        {
+                           if (_messageBoxServise.Show("You sure you want to delete this note", "Remove",
+                               _messageBoxButtons[MyMessageBoxButton.YesNo],
+                               _messageBoxImages[MyMessageBoxImage.Warning]) == false)
+                           {
+                               return;
+                           }
                            Note note = obj as Note;
                            if (note != null)
                            {

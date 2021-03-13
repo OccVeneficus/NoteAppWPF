@@ -5,6 +5,7 @@
     /// </summary>
     public enum MyMessageBoxButton
     {
-        OK
+        OK,
+        YesNo
     }
 }
