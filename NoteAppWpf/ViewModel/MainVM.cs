@@ -30,6 +30,11 @@ namespace NoteAppWpf.ViewModel
             Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
         /// <summary>
+        /// Свойство для доступа к категориям комбобокса
+        /// </summary>
+        public  List<NoteCategory> NoteCategories => _noteCategories;
+
+        /// <summary>
         /// VM для окна About
         /// </summary>
         private AboutWindowViewModel _aboutWindowViewModel;
@@ -41,6 +46,9 @@ namespace NoteAppWpf.ViewModel
 
         private ObservableCollection<Note> _selectedNotes;
 
+        /// <summary>
+        /// Заметки выбранной категории
+        /// </summary>
         public ObservableCollection<Note> SelectedNotes
         {
             get => _selectedNotes;
@@ -102,7 +110,10 @@ namespace NoteAppWpf.ViewModel
         /// <param name="window">окно для закрытия</param>
         private void CloseWindow(IClosable window)
         {
-            window?.Close();
+            if (window != null)
+            {
+                window.Close();
+            }
         }
 
         /// <summary>
@@ -112,7 +123,7 @@ namespace NoteAppWpf.ViewModel
 
         public NoteCategory SelectedCategory
         {
-            get => _selectedCategory;
+            get { return _selectedCategory; }
             set
             {
                 if (value != NoteCategory.All)
