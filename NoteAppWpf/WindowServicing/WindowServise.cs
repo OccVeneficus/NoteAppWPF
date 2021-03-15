@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using GalaSoft.MvvmLight;
-using NoteAppWpf.ViewModel;
+using NoteAppWpf.View;
 
-namespace NoteAppWpf.View
+namespace NoteAppWpf.WindowServicing
 {
     public class WindowServise : IWindowServise
     {
@@ -13,16 +12,16 @@ namespace NoteAppWpf.View
         /// </summary>
         private Window _window;
 
-        public bool? ShowDialog(string windowType, ViewModelBase viewModel)
+        public bool? ShowDialog(WindowType windowType, ViewModelBase viewModel)
         {
             switch (windowType)
             {
-                case "NoteWindow":
+                case WindowType.Note:
                 {
                     _window = new NoteWindow(viewModel);
                     return _window.ShowDialog();
                 }
-                case "AboutWindow":
+                case WindowType.About:
                 {
                     _window = new About();
                     return _window.ShowDialog();

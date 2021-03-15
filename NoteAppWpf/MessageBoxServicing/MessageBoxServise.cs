@@ -1,7 +1,6 @@
 ﻿using System.Windows;
-using NoteAppWpf.ViewModel;
 
-namespace NoteAppWpf.View
+namespace NoteAppWpf.MessageBoxServicing
 {
     public class MessageBoxServise : IMessageBoxServise
     {

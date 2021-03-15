@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NoteApp.Annotations;
+using NoteApp.Properties;
 
 namespace NoteApp
 {
@@ -17,10 +17,7 @@ namespace NoteApp
         /// Доступ к коллекции записок
         /// </summary>
         public ObservableCollection<Note> Notes {
-            get
-            {
-                return _notes;
-            }
+            get => _notes;
             set
             {
                 _notes = value;
@@ -35,10 +32,7 @@ namespace NoteApp
         /// </summary>
         public Note CurrentNote 
         {
-            get
-            {
-                return _currentNote;
-            }
+            get => _currentNote;
             set
             {
                 _currentNote = value;

@@ -2,7 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using GalaSoft.MvvmLight;
-using NoteApp.Annotations;
+using NoteApp.Properties;
+using NoteAppWpf.WindowServicing;
 
 namespace NoteAppWpf.ViewModel
 {
@@ -11,15 +12,15 @@ namespace NoteAppWpf.ViewModel
     /// </summary>
     public class AboutWindowViewModel : ViewModelBase,INotifyPropertyChanged
     {
-        private IWindowServise _windowServise;
+        private readonly IWindowServise _windowServise;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public AboutWindowViewModel(IWindowServise windowServise)
         {
             _windowServise = windowServise;
-            _windowServise.ShowDialog("AboutWindow",this);
+            _windowServise.ShowDialog(WindowType.About,this);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

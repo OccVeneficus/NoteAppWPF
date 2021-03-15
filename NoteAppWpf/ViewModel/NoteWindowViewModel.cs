@@ -8,7 +8,9 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using NoteApp;
-using NoteApp.Annotations;
+using NoteApp.Properties;
+using NoteAppWpf.MessageBoxServicing;
+using NoteAppWpf.WindowServicing;
 
 namespace NoteAppWpf.ViewModel
 {
@@ -53,10 +55,7 @@ namespace NoteAppWpf.ViewModel
         /// </summary>
         public string NewNoteTitle
         {
-            get
-            {
-                return _newNoteTitle;
-            }
+            get => _newNoteTitle;
             set
             {
                 if (_newNoteTitle != value)
@@ -87,7 +86,8 @@ namespace NoteAppWpf.ViewModel
 
         private readonly IWindowServise _windowServise;
 
-        public NoteWindowViewModel(Note note, IMessageBoxServise messageBoxServise, IWindowServise windowServise)
+        public NoteWindowViewModel(Note note, IMessageBoxServise messageBoxServise,
+            IWindowServise windowServise)
         {
 
             Note = note;
@@ -102,7 +102,7 @@ namespace NoteAppWpf.ViewModel
         /// </summary>
         public void ShowDialogWindow()
         {
-            bool? dialogResult = _windowServise.ShowDialog("NoteWindow", this);
+            bool? dialogResult = _windowServise.ShowDialog(WindowType.Note, this);
             if (dialogResult != null)
             {
                 DialogResult = (bool) dialogResult;

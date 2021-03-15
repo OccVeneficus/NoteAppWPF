@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using NoteApp.Annotations;
+using NoteApp.Properties;
 
 namespace NoteApp
 {
@@ -87,7 +87,15 @@ namespace NoteApp
         /// <summary>
         /// Возвращает дату создания заметки
         /// </summary>
-        public DateTime CreatedDate { get; private set ; }
+        public DateTime CreatedDate
+        {
+            get => _createdDate;
+            private set
+            {
+                _createdDate = value;
+                OnPropertyChanged(nameof(CreatedDate));
+            }
+        }
     
         /// <summary>
         /// Дата последнего изменения заметки
@@ -100,10 +108,7 @@ namespace NoteApp
 
         public DateTime ModifiedDate
         {
-            get
-            {
-                return _modifiedDate;
-            }
+            get => _modifiedDate;
             set
             {
                 _modifiedDate = value;

@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace NoteAppWpf.ViewModel
+namespace NoteAppWpf.WindowServicing
 {
     /// <summary>
     /// Интерфейс для сервисного класса для диалоговых окон
@@ -13,7 +13,7 @@ namespace NoteAppWpf.ViewModel
         /// <param name="windowType">Тип пользовательского окна</param>
         /// <param name="viewModel">Контекст</param>
         /// <returns></returns>
-        bool? ShowDialog(string windowType, ViewModelBase viewModel);
+        bool? ShowDialog(WindowType windowType, ViewModelBase viewModel);
 
         /// <summary>
         /// Метод для установки результата диалога по нажатию кнопок

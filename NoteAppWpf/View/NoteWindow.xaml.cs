@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using NoteAppWpf.ViewModel;
 
 namespace NoteAppWpf.View
@@ -11,7 +10,7 @@ namespace NoteAppWpf.View
     {
         public NoteWindow(ViewModelBase viewModel)
         {
-            DataContext = viewModel;
+            DataContext = (NoteWindowViewModel)viewModel;
             InitializeComponent();
         }
     }

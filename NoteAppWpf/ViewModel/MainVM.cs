@@ -7,14 +7,16 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using GalaSoft.MvvmLight.CommandWpf;
 using NoteApp;
-using NoteApp.Annotations;
+using NoteApp.Properties;
+using NoteAppWpf.MessageBoxServicing;
+using NoteAppWpf.WindowServicing;
 
 namespace NoteAppWpf.ViewModel
 {
     /// <summary>
     /// View Model главного окна
     /// </summary>
-    public class ApplicationViewModel : INotifyPropertyChanged
+    public class MainVM : INotifyPropertyChanged
     {
         /// <summary>
         /// Поле для хранения проекта
@@ -24,11 +26,8 @@ namespace NoteAppWpf.ViewModel
         /// <summary>
         /// Лист категорий для ComboBox
         /// </summary>
-        private readonly List<NoteCategory> _noteCategories = Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
-
-        public  List<NoteCategory> NoteCategories => _noteCategories;
-
-        public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
+        private readonly List<NoteCategory> _noteCategories =
+            Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
         /// <summary>
         /// VM для окна About
@@ -44,14 +43,28 @@ namespace NoteAppWpf.ViewModel
 
         public ObservableCollection<Note> SelectedNotes
         {
-            get
-            {
-                return _selectedNotes;
-            }
+            get => _selectedNotes;
             set
             {
                 _selectedNotes = value;
                 OnPropertyChanged(nameof(SelectedNotes));
+            }
+        }
+
+        private Note _selectedNote;
+
+        public Note SelectedNote
+        {
+            get
+            {
+                var note = _selectedNotes.FirstOrDefault(x => x.Equals(_selectedNote));
+                return note;
+            }
+            set 
+            {
+                var note = _selectedNotes.FirstOrDefault(x => x.Equals(value));
+                _selectedNote = note;             
+                OnPropertyChanged(nameof(SelectedNote));
             }
         }
 
@@ -60,10 +73,7 @@ namespace NoteAppWpf.ViewModel
         /// </summary>
         public Project Project
         {
-            get
-            {
-                return _project;
-            }
+            get => _project;
             set
             {
                 _project = value;
@@ -74,8 +84,9 @@ namespace NoteAppWpf.ViewModel
         private readonly IWindowServise _windowServise;
 
         private readonly IMessageBoxServise _messageBoxServise;
+        public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
 
-        public ApplicationViewModel(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
+        public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
         {
             _windowServise = windowServise;
             _messageBoxServise = messageBoxServise;
@@ -91,10 +102,7 @@ namespace NoteAppWpf.ViewModel
         /// <param name="window">окно для закрытия</param>
         private void CloseWindow(IClosable window)
         {
-            if (window != null)
-            {
-                window.Close();
-            }
+            window?.Close();
         }
 
         /// <summary>
@@ -104,7 +112,7 @@ namespace NoteAppWpf.ViewModel
 
         public NoteCategory SelectedCategory
         {
-            get { return _selectedCategory; }
+            get => _selectedCategory;
             set
             {
                 if (value != NoteCategory.All)
@@ -148,14 +156,14 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        private Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
+        private readonly Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
             new Dictionary<MyMessageBoxButton, MessageBoxButton>
             {
                 {MyMessageBoxButton.OK, MessageBoxButton.OK},
                 {MyMessageBoxButton.YesNo, MessageBoxButton.YesNo}
             };
 
-        private Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages =
+        private readonly Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages =
             new Dictionary<MyMessageBoxImage, MessageBoxImage>
             {
                 {MyMessageBoxImage.Warning, MessageBoxImage.Warning}
@@ -173,7 +181,9 @@ namespace NoteAppWpf.ViewModel
                 return _removeCommand ??
                        (_removeCommand = new RelayCommand(obj =>
                        {
-                           if (_messageBoxServise.Show("You sure you want to delete this note", "Remove",
+                           if (_messageBoxServise.Show(
+                               "You sure you want to delete this note",
+                               "Remove",
                                _messageBoxButtons[MyMessageBoxButton.YesNo],
                                _messageBoxImages[MyMessageBoxImage.Warning]) == false)
                            {
@@ -214,7 +224,13 @@ namespace NoteAppWpf.ViewModel
                             _noteWindowViewModel = new NoteWindowViewModel
                                 (newNote, _messageBoxServise, _windowServise);
                         }
-
+                        else
+                        {
+                            _messageBoxServise.Show("Note isn't chosen", "Editing error",
+                                _messageBoxButtons[MyMessageBoxButton.OK],
+                                _messageBoxImages[MyMessageBoxImage.Warning]);
+                            return;
+                        }
                         if (_noteWindowViewModel.DialogResult.Equals(true))
                         {
                             _project.CurrentNote.Name = _noteWindowViewModel.Note.Name;
