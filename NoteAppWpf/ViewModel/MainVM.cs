@@ -123,6 +123,8 @@ namespace NoteAppWpf.ViewModel
                     SelectedNotes = Project.SortNotesByModifiedDate(Project.Notes);
                     _selectedCategory = value;
                 }
+
+                _project.CurrentNote = SelectedNotes.Count != 0 ? SelectedNotes[0] : null;
             }
         }
 
@@ -278,6 +280,11 @@ namespace NoteAppWpf.ViewModel
             ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
         }
 
+        /// <summary>
+        /// Обработчик события загрузки приложения
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="routedEventArgs"></param>
         public void OnWindowLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);

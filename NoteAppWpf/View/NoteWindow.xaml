@@ -7,10 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:my="clr-namespace:NoteAppWpf.ViewModel"
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+    xmlns:converters="clr-namespace:NoteAppWpf.View.Converters"
     Title="NoteWindow"
     Width="800"
     Height="450"
     mc:Ignorable="d">
+    <Window.Resources>
+        <converters:DateConverter x:Key="DateConverter" />
+
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -53,17 +58,17 @@
             <TextBlock Margin="20,5,16,0">
                 Created:
             </TextBlock>
-            <DatePicker
-                Margin="0,0,30,0"
-                IsEnabled="False"
-                SelectedDate="{Binding Path=Note.CreatedDate, Mode=OneWay}"/>
+            <TextBlock
+                Margin="0,5,30,0"
+                Text="{Binding Path=Note.CreatedDate, Mode=OneWay,
+                Converter={StaticResource DateConverter}}"/>
             <TextBlock Margin="20,5,16,0">
                 Modified:
             </TextBlock>
-            <DatePicker
-                Margin="0,0,30,0"
-                IsEnabled="False"
-                SelectedDate="{Binding Path=Note.ModifiedDate, Mode=OneWay}" />
+            <TextBlock
+                Margin="0,5,30,0"
+                Text="{Binding Path=Note.ModifiedDate, Mode=OneWay,
+                Converter={StaticResource DateConverter}}"/>
         </StackPanel>
         <TextBox
             Grid.Row="3"

@@ -163,10 +163,10 @@
             Margin="10,0,0,0"
             Orientation="Horizontal">
             <Label>Created:</Label>
-            <TextBlock Margin="0,5,0,0" Text="{Binding Project.CurrentNote.CreatedDate,
+            <TextBlock Margin="0,5,30,0" Text="{Binding Project.CurrentNote.CreatedDate,
                 Mode=OneWay, Converter={StaticResource DateConverter}}" />
             <Label>Modified:</Label>
-            <TextBlock Margin="0,5,0,0" Text="{Binding Project.CurrentNote.ModifiedDate,
+            <TextBlock Margin="0,5,30,0" Text="{Binding Project.CurrentNote.ModifiedDate,
                 Converter={StaticResource DateConverter}}" />
         </StackPanel>
     </Grid>
