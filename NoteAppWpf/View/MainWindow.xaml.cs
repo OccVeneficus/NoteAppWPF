@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using NoteAppWpf.ViewModel;
 
 namespace NoteAppWpf.View

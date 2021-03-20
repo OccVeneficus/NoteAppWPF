@@ -63,15 +63,9 @@ namespace NoteAppWpf.ViewModel
 
         public Note SelectedNote
         {
-            get
-            {
-                return _selectedNote;
-                var note = _selectedNotes.FirstOrDefault(x => x.Equals(_selectedNote));
-                return note;
-            }
+            get => _selectedNote;
             set 
             {
-                //var note = _selectedNotes.FirstOrDefault(x => x.Equals(value));
                 _selectedNote = value;             
                 OnPropertyChanged(nameof(SelectedNote));
             }
@@ -95,14 +89,10 @@ namespace NoteAppWpf.ViewModel
         private readonly IMessageBoxServise _messageBoxServise;
         public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
 
-        public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise, Project project)
+        public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
         {
             _windowServise = windowServise;
             _messageBoxServise = messageBoxServise;
-            Project = project;
-            Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
-            SelectedCategory = NoteCategory.All;
-            CloseWindowCommand = new RelayCommand<IClosable>(CloseWindow);
         }
 
         /// <summary>
@@ -208,12 +198,10 @@ namespace NoteAppWpf.ViewModel
                            {
                                return;
                            }
-                           if (note != null)
-                           {
-                               _project.Notes.Remove(note);
-                               SelectedCategory = _selectedCategory;
-                               ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
-                           }
+
+                           _project.Notes.Remove(note);
+                           SelectedCategory = _selectedCategory;
+                           ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
 
                            if (_project.Notes.Count != 0)
                            {
@@ -288,6 +276,13 @@ namespace NoteAppWpf.ViewModel
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
+        }
+
+        public void OnWindowLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+            SelectedCategory = NoteCategory.All;
+            CloseWindowCommand = new RelayCommand<IClosable>(CloseWindow);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
