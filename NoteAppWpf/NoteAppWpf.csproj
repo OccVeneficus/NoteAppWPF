@@ -70,8 +70,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="WindowServicing\WindowServise.cs" />
-    <Compile Include="WindowServicing\WindowTypes.cs" />
+    <Compile Include="Services\WindowServices\WindowServise.cs" />
+    <Compile Include="Services\WindowServices\WindowTypes.cs" />
     <Page Include="View\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -80,14 +80,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="ViewModel\AboutWindowViewModel.cs" />
+    <Compile Include="ViewModel\AboutWindowVM.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="ViewModel\IClosable.cs" />
-    <Compile Include="MessageBoxServicing\IMessageBoxServise.cs" />
-    <Compile Include="WindowServicing\IWindowServise.cs" />
+    <Compile Include="Services\MessageBoxServices\IMessageBoxServise.cs" />
+    <Compile Include="Services\WindowServices\IWindowServise.cs" />
     <Compile Include="ViewModel\MyMessageBoxButton.cs" />
     <Compile Include="ViewModel\MyMessageBoxImage.cs" />
-    <Compile Include="ViewModel\NoteWindowViewModel.cs" />
+    <Compile Include="ViewModel\NoteWindowVM.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\Converters\DateConverter.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -106,7 +107,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MessageBoxServicing\MessageBoxServise.cs" />
+    <Compile Include="Services\MessageBoxServices\MessageBoxServise.cs" />
     <Compile Include="View\NoteWindow.xaml.cs">
       <DependentUpon>NoteWindow.xaml</DependentUpon>
     </Compile>

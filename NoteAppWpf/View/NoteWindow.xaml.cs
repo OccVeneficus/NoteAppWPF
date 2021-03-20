@@ -10,7 +10,7 @@ namespace NoteAppWpf.View
     {
         public NoteWindow(ViewModelBase viewModel)
         {
-            DataContext = (NoteWindowViewModel)viewModel;
+            DataContext = (NoteWindowVM)viewModel;
             InitializeComponent();
         }
     }

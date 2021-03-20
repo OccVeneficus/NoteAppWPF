@@ -3,7 +3,7 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using NoteAppWpf.View;
 
-namespace NoteAppWpf.WindowServicing
+namespace NoteAppWpf.Services.WindowServices
 {
     public class WindowServise : IWindowServise
     {

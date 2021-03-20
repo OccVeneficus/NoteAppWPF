@@ -22,10 +22,7 @@ namespace NoteApp
         /// </summary>
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
             set
             {
                 if (value.Length > 50)
@@ -46,10 +43,7 @@ namespace NoteApp
         /// </summary>
         public string Text
         {
-            get
-            {
-                return _text;
-            }
+            get => _text;
             set
             {
                 _text = value;
@@ -67,10 +61,7 @@ namespace NoteApp
         /// </summary>
         public NoteCategory Category
         {
-            get
-            {
-                return _category;
-            }
+            get => _category;
             set
             {
                 _category = value;

@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using NoteAppWpf.MessageBoxServicing;
 using NoteAppWpf.ViewModel;
-using NoteAppWpf.WindowServicing;
 
 namespace NoteAppWpf.View
 {
@@ -13,9 +11,6 @@ namespace NoteAppWpf.View
         public MainWindow()
         {
             InitializeComponent();
-            MainVM viewModel = new MainVM(new MessageBoxServise(), new WindowServise());
-            DataContext = viewModel;
-            Closing += viewModel.OnWindowClosing;
         }
     }
 }

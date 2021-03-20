@@ -9,15 +9,15 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using NoteApp;
 using NoteApp.Properties;
-using NoteAppWpf.MessageBoxServicing;
-using NoteAppWpf.WindowServicing;
+using NoteAppWpf.Services.MessageBoxServices;
+using NoteAppWpf.Services.WindowServices;
 
 namespace NoteAppWpf.ViewModel
 {
     /// <summary>
     /// VM окна редактирования заметки
     /// </summary>
-    public class NoteWindowViewModel : ViewModelBase,INotifyDataErrorInfo,INotifyPropertyChanged
+    public class NoteWindowVM : ViewModelBase,INotifyDataErrorInfo,INotifyPropertyChanged
     {
         private Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
             new Dictionary<MyMessageBoxButton, MessageBoxButton>
@@ -86,7 +86,7 @@ namespace NoteAppWpf.ViewModel
 
         private readonly IWindowServise _windowServise;
 
-        public NoteWindowViewModel(Note note, IMessageBoxServise messageBoxServise,
+        public NoteWindowVM(Note note, IMessageBoxServise messageBoxServise,
             IWindowServise windowServise)
         {
 
@@ -112,10 +112,10 @@ namespace NoteAppWpf.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName]
+            string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         }
 
         private ICommand _cancelCommand = null;

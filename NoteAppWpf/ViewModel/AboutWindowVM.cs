@@ -3,20 +3,20 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using NoteApp.Properties;
-using NoteAppWpf.WindowServicing;
+using NoteAppWpf.Services.WindowServices;
 
 namespace NoteAppWpf.ViewModel
 {
     /// <summary>
     /// View Model окна About
     /// </summary>
-    public class AboutWindowViewModel : ViewModelBase,INotifyPropertyChanged
+    public class AboutWindowVM : ViewModelBase,INotifyPropertyChanged
     {
         private readonly IWindowServise _windowServise;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AboutWindowViewModel(IWindowServise windowServise)
+        public AboutWindowVM(IWindowServise windowServise)
         {
             _windowServise = windowServise;
             _windowServise.ShowDialog(WindowType.About,this);

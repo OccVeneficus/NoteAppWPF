@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NoteAppWpf.MessageBoxServicing
+namespace NoteAppWpf.Services.MessageBoxServices
 {
     /// <summary>
     /// Интерфейс для сервисного класса показа окон с сообщениями 

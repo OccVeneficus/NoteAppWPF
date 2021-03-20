@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace NoteAppWpf.WindowServicing
+namespace NoteAppWpf.Services.WindowServices
 {
     /// <summary>
     /// Интерфейс для сервисного класса для диалоговых окон

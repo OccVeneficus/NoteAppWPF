@@ -1,4 +1,4 @@
-﻿namespace NoteAppWpf.WindowServicing
+﻿namespace NoteAppWpf.Services.WindowServices
 {
     public enum WindowType
     {
