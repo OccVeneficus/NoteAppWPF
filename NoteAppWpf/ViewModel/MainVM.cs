@@ -87,6 +87,7 @@ namespace NoteAppWpf.ViewModel
         private readonly IWindowServise _windowServise;
 
         private readonly IMessageBoxServise _messageBoxServise;
+
         public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
 
         public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
@@ -157,19 +158,6 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        private readonly Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
-            new Dictionary<MyMessageBoxButton, MessageBoxButton>
-            {
-                {MyMessageBoxButton.OK, MessageBoxButton.OK},
-                {MyMessageBoxButton.YesNo, MessageBoxButton.YesNo}
-            };
-
-        private readonly Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages =
-            new Dictionary<MyMessageBoxImage, MessageBoxImage>
-            {
-                {MyMessageBoxImage.Warning, MessageBoxImage.Warning}
-            };
-
         private RelayCommand _removeCommand;
 
         /// <summary>
@@ -188,20 +176,23 @@ namespace NoteAppWpf.ViewModel
                                _messageBoxServise.Show(
                                    "There is no notes to remove, or note isn't chosen.",
                                    "Remove",
-                                   _messageBoxButtons[MyMessageBoxButton.OK],
-                                   _messageBoxImages[MyMessageBoxImage.Warning]);
+                                   MyMessageBoxButton.OK,
+                                   MyMessageBoxImage.Warning);
                                return;
                            }
                            if (_messageBoxServise.Show(
                                "You sure you want to delete this note?",
                                "Remove",
-                               _messageBoxButtons[MyMessageBoxButton.YesNo],
-                               _messageBoxImages[MyMessageBoxImage.Warning]) == false)
+                               MyMessageBoxButton.YesNo,
+                               MyMessageBoxImage.Warning) == false)
                            {
                                return;
                            }
 
-                           _project.Notes.Remove(note);
+                           _project.Notes.Remove(_project.Notes
+                               .Where(x => x.Name == note.Name && x.CreatedDate == note.CreatedDate).ToList()[0]);
+
+                           //_project.Notes.Remove(note);
                            SelectedCategory = _selectedCategory;
                            ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
 
@@ -235,8 +226,8 @@ namespace NoteAppWpf.ViewModel
                         else
                         {
                             _messageBoxServise.Show("Note isn't chosen", "Editing error",
-                                _messageBoxButtons[MyMessageBoxButton.OK],
-                                _messageBoxImages[MyMessageBoxImage.Warning]);
+                                MyMessageBoxButton.OK,
+                                MyMessageBoxImage.Warning);
                             return;
                         }
                         if (_noteWindowVm.DialogResult.Equals(true))

@@ -24,11 +24,12 @@ namespace NoteAppWpf
             base.OnStartup(e);
 
             var mainView = new MainWindow();
-            var container = ((App)App.Current).Container;
-            mainView.DataContext= ActivatorUtilities.GetServiceOrCreateInstance(container, typeof(MainVM));
-            ((MainVM) mainView.DataContext).Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
-            mainView.Closing += ((MainVM) mainView.DataContext).OnWindowClosing;
-            mainView.Loaded += ((MainVM) mainView.DataContext).OnWindowLoaded;
+            var container = Container;
+            var mainVM = (MainVM)ActivatorUtilities.GetServiceOrCreateInstance(container, typeof(MainVM));
+            mainVM.Project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
+            mainView.Closing += mainVM.OnWindowClosing;
+            mainView.Loaded += mainVM.OnWindowLoaded;
+            mainView.DataContext= mainVM;
             mainView.Show();
         }
 

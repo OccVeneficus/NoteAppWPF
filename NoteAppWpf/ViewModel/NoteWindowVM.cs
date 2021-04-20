@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using NoteApp;
@@ -19,18 +18,6 @@ namespace NoteAppWpf.ViewModel
     /// </summary>
     public class NoteWindowVM : ViewModelBase,INotifyDataErrorInfo,INotifyPropertyChanged
     {
-        private Dictionary<MyMessageBoxButton, MessageBoxButton> _messageBoxButtons =
-            new Dictionary<MyMessageBoxButton, MessageBoxButton>
-        {
-            {MyMessageBoxButton.OK, MessageBoxButton.OK}
-        };
-
-        private Dictionary<MyMessageBoxImage, MessageBoxImage> _messageBoxImages = 
-            new Dictionary<MyMessageBoxImage, MessageBoxImage>
-        {
-            {MyMessageBoxImage.Warning, MessageBoxImage.Warning}
-        };
-
         /// <summary>
         /// Словарь для хранения ошибок проверки свойств 
         /// </summary>
@@ -161,8 +148,8 @@ namespace NoteAppWpf.ViewModel
                             _messageBoxServise.Show(
                                 "Wrong title size",
                                 "Validation Error",
-                                _messageBoxButtons[MyMessageBoxButton.OK],
-                                _messageBoxImages[MyMessageBoxImage.Warning]);
+                                MyMessageBoxButton.OK,
+                                MyMessageBoxImage.Warning);
                         }
                     });
                 }

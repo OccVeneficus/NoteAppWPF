@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NoteAppWpf.ViewModel;
 
 namespace NoteAppWpf.Services.MessageBoxServices
 {
@@ -14,6 +15,6 @@ namespace NoteAppWpf.Services.MessageBoxServices
         /// <param name="caption">Заголовок формы</param>
         /// <param name="button">Кнопки формы</param>
         /// <param name="image">Изображение на кнопке</param>
-        bool Show(string message, string caption, MessageBoxButton button, MessageBoxImage image);
+        bool Show(string message, string caption, MyMessageBoxButton button, MyMessageBoxImage image);
     }
 }
