@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using NoteApp;
-using NoteApp.Properties;
 using NoteAppWpf.Services.MessageBoxServices;
 using NoteAppWpf.Services.WindowServices;
 
@@ -16,12 +15,9 @@ namespace NoteAppWpf.ViewModel
     /// <summary>
     /// View Model главного окна
     /// </summary>
-    public class MainVM : INotifyPropertyChanged
+    public class MainVM : ViewModelBase
     {
-        /// <summary>
-        /// Поле для хранения проекта
-        /// </summary>
-        private Project _project;
+        #region Константы
 
         /// <summary>
         /// Лист категорий для ComboBox
@@ -29,10 +25,23 @@ namespace NoteAppWpf.ViewModel
         private readonly List<NoteCategory> _noteCategories =
             Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
+        private readonly IWindowServise _windowServise;
+
+        private readonly IMessageBoxServise _messageBoxServise;
+
+        #endregion
+
+        #region Поля
+
         /// <summary>
-        /// Свойство для доступа к категориям комбобокса
+        /// Поле для хранения проекта
         /// </summary>
-        public  List<NoteCategory> NoteCategories => _noteCategories;
+        private readonly Project _project = ProjectManager.LoadFromFile(ProjectManager.DefaultFilePath);
+
+        /// <summary>
+        /// Выбранная заметка
+        /// </summary>
+        private Note _selectedNote;
 
         /// <summary>
         /// VM для окна About
@@ -46,66 +55,39 @@ namespace NoteAppWpf.ViewModel
 
         private ObservableCollection<Note> _selectedNotes;
 
+        private RelayCommand _removeCommand;
+
+        private RelayCommand _addCommand;
+
+        private RelayCommand _editCommand;
+
+        private RelayCommand _aboutWindowCommand;
+
+        private NoteCategory _selectedCategory;
+
+        #endregion
+
+        #region Свойства
+
+        /// <summary>
+        /// Свойство для доступа к категориям комбобокса
+        /// </summary>
+        public List<NoteCategory> NoteCategories => _noteCategories;
+
         /// <summary>
         /// Заметки выбранной категории
         /// </summary>
         public ObservableCollection<Note> SelectedNotes
         {
             get => _selectedNotes;
-            set
-            {
-                _selectedNotes = value;
-                OnPropertyChanged(nameof(SelectedNotes));
-            }
+            set => Set(ref _selectedNotes, value);
         }
-
-        private Note _selectedNote;
 
         public Note SelectedNote
         {
             get => _selectedNote;
-            set 
-            {
-                _selectedNote = value;             
-                OnPropertyChanged(nameof(SelectedNote));
-            }
+            set => Set(ref _selectedNote, value);
         }
-
-        /// <summary>
-        /// Свойство для хранения экземпляра проекта
-        /// </summary>
-        public Project Project
-        {
-            get => _project;
-            set
-            {
-                _project = value;
-                OnPropertyChanged(nameof(Project));
-            }
-        }
-
-        private readonly IWindowServise _windowServise;
-
-        private readonly IMessageBoxServise _messageBoxServise;
-
-        public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
-
-        public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
-        {
-            _windowServise = windowServise;
-            _messageBoxServise = messageBoxServise;
-        }
-
-        /// <summary>
-        /// Метод для закрытия главного окна
-        /// </summary>
-        /// <param name="window">окно для закрытия</param>
-        private void CloseWindow(IClosable window)
-        {
-            window?.Close();
-        }
-
-        private NoteCategory _selectedCategory;
 
         /// <summary>
         /// Свойство для хранения выбранной категории в ComboBox
@@ -117,19 +99,19 @@ namespace NoteAppWpf.ViewModel
             {
                 if (value != NoteCategory.All)
                 {
-                    SelectedNotes = Project.SortNotesByModifiedDate(Project.Notes, value);
+                    SelectedNotes = _project.SortNotesByModifiedDate(_project.Notes, value);
                 }
                 else
                 {
-                    SelectedNotes = Project.SortNotesByModifiedDate(Project.Notes);
+                    SelectedNotes = _project.SortNotesByModifiedDate(_project.Notes);
                     _selectedCategory = value;
                 }
 
-                _project.CurrentNote = SelectedNotes.Count != 0 ? SelectedNotes[0] : null;
+                SelectedNote = SelectedNotes.Count != 0 ? SelectedNotes[0] : null;
             }
         }
 
-        private RelayCommand _addCommand;
+        #region Команды
 
         /// <summary>
         /// Команда добавления новой записки
@@ -142,7 +124,7 @@ namespace NoteAppWpf.ViewModel
                        (_addCommand = new RelayCommand(obj =>
                            {
                                Note newNote = new Note(DateTime.Now, DateTime.Now,
-                                   "New note","",NoteCategory.Other);
+                                   "New note", "", NoteCategory.Other);
 
                                _noteWindowVm = new NoteWindowVM
                                    (newNote, _messageBoxServise, _windowServise);
@@ -151,14 +133,13 @@ namespace NoteAppWpf.ViewModel
                                {
                                    _project.Notes.Add(newNote);
                                    SelectedCategory = _selectedCategory;
-                                   ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
+                                   ProjectManager.SaveToFile(_project, ProjectManager.DefaultFilePath);
                                }
                            }
                        ));
             }
         }
-
-        private RelayCommand _removeCommand;
+        public RelayCommand<IClosable> CloseWindowCommand { get; private set; }
 
         /// <summary>
         /// Команда для удаления записи
@@ -189,22 +170,18 @@ namespace NoteAppWpf.ViewModel
                                return;
                            }
 
-                           _project.Notes.Remove(_project.Notes
-                               .Where(x => x.Name == note.Name && x.CreatedDate == note.CreatedDate).ToList()[0]);
+                           _project.Notes.Remove(SelectedNote);
 
-                           //_project.Notes.Remove(note);
                            SelectedCategory = _selectedCategory;
-                           ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
+                           ProjectManager.SaveToFile(_project, ProjectManager.DefaultFilePath);
 
                            if (_project.Notes.Count != 0)
                            {
-                               Project.CurrentNote = _project.Notes[0];
+                               SelectedNote = _project.Notes[0];
                            }
                        }));
             }
         }
-
-        private RelayCommand _editCommand;
 
         /// <summary>
         /// Команда для редактирования записи
@@ -217,34 +194,29 @@ namespace NoteAppWpf.ViewModel
                     _editCommand = new RelayCommand(obj =>
                     {
                         Note note = obj as Note;
-                        if (note != null)
-                        {
-                            Note newNote = (Note)note.Clone();
-                            _noteWindowVm = new NoteWindowVM
-                                (newNote, _messageBoxServise, _windowServise);
-                        }
-                        else
+                        if (note == null)
                         {
                             _messageBoxServise.Show("Note isn't chosen", "Editing error",
                                 MyMessageBoxButton.OK,
                                 MyMessageBoxImage.Warning);
                             return;
                         }
+                        Note newNote = (Note)note.Clone();
+                        _noteWindowVm = new NoteWindowVM
+                                (newNote, _messageBoxServise, _windowServise);
                         if (_noteWindowVm.DialogResult.Equals(true))
                         {
-                            _project.CurrentNote.Name = _noteWindowVm.Note.Name;
-                            _project.CurrentNote.Text = _noteWindowVm.Note.Text;
-                            _project.CurrentNote.ModifiedDate = DateTime.Now;
-                            _project.CurrentNote.Category = _noteWindowVm.Note.Category;
-                            Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+                            SelectedNote.Name = _noteWindowVm.Note.Name;
+                            SelectedNote.Text = _noteWindowVm.Note.Text;
+                            SelectedNote.ModifiedDate = DateTime.Now;
+                            SelectedNote.Category = _noteWindowVm.Note.Category;
+                            _project.Notes = _project.SortNotesByModifiedDate(_project.Notes);
                             SelectedCategory = _selectedCategory;
-                            ProjectManager.SaveToFile(Project,ProjectManager.DefaultFilePath);
+                            ProjectManager.SaveToFile(_project, ProjectManager.DefaultFilePath);
                         }
                     }));
             }
         }
-
-        private RelayCommand _aboutWindowCommand;
 
         /// <summary>
         /// Команда для показа окна "О программе"
@@ -261,6 +233,35 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
+        #endregion
+
+        #endregion
+
+        #region Конструкторы
+
+        public MainVM(IMessageBoxServise messageBoxServise, IWindowServise windowServise)
+        {
+            _windowServise = windowServise;
+            _messageBoxServise = messageBoxServise;
+        }
+
+        #endregion
+
+        #region Приватные методы
+
+        /// <summary>
+        /// Метод для закрытия главного окна
+        /// </summary>
+        /// <param name="window">окно для закрытия</param>
+        private void CloseWindow(IClosable window)
+        {
+            window?.Close();
+        }
+
+        #endregion
+
+        #region Публичные методы
+
         /// <summary>
         /// Обработчик закрытия приложения
         /// </summary>
@@ -268,7 +269,7 @@ namespace NoteAppWpf.ViewModel
         /// <param name="e">аргументы</param>
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            ProjectManager.SaveToFile(Project, ProjectManager.DefaultFilePath);
+            ProjectManager.SaveToFile(_project, ProjectManager.DefaultFilePath);
         }
 
         /// <summary>
@@ -278,17 +279,12 @@ namespace NoteAppWpf.ViewModel
         /// <param name="routedEventArgs"></param>
         public void OnWindowLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            Project.Notes = Project.SortNotesByModifiedDate(Project.Notes);
+            _project.Notes = _project.SortNotesByModifiedDate(_project.Notes);
+            SelectedNote = _project.Notes.Count == 0 ? null :_project.Notes[0];
             SelectedCategory = NoteCategory.All;
             CloseWindowCommand = new RelayCommand<IClosable>(CloseWindow);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

@@ -24,21 +24,6 @@ namespace NoteApp
             }
         }
 
-
-        private Note _currentNote;
-        /// <summary>
-        /// Свойство для хранения текущей выбранной заметки
-        /// </summary>
-        public Note CurrentNote 
-        {
-            get => _currentNote;
-            set
-            {
-                _currentNote = value;
-                OnPropertyChanged(nameof(CurrentNote));
-            }
-        }
-
         /// <summary>
         /// Сортировка заметок по убыванию даты последнего изменения
         /// </summary>

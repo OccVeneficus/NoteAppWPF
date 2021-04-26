@@ -13,63 +13,66 @@
     Icon="/Resources/NoteApp.ico"
     mc:Ignorable="d">
     <Window.Resources>
-        <converters:DateConverter x:Key="DateConverter" />
+        <converters:DateConverter x:Key="DateConverter"/>
         <Image
             x:Key="Edit"
+            SnapsToDevicePixels="True"
             Width="16"
             Height="16"
-            Source="../Resources/pencil.png" />
+            Source="../Resources/pencil.png"/>
         <Image
             x:Key="Add"
+            SnapsToDevicePixels="True"
             Width="16"
             Height="16"
-            Source="../Resources/plus.png" />
+            Source="../Resources/plus.png"/>
         <Image
             x:Key="Remove"
+            SnapsToDevicePixels="True"
             Width="16"
             Height="16"
-            Source="../Resources/unchecked.png" />
+            Source="../Resources/unchecked.png"/>
     </Window.Resources>
     <Grid Background="#f0f0f0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="1*"
                 MinWidth="228.57"
-                MaxWidth="278.57" />
-            <ColumnDefinition Width="2.5*" />
+                MaxWidth="278.57"/>
+            <ColumnDefinition Width="2.5*"/>
         </Grid.ColumnDefinitions>
         <Menu
             Grid.Row="0"
             Grid.ColumnSpan="2"
-            Margin="8,0,0,0"
+            Margin="8 0 0 0"
             IsMainMenu="True">
             <MenuItem Header="File">
                 <MenuItem
                     Command="{Binding CloseWindowCommand, Mode=OneWay}"
                     CommandParameter="{Binding ElementName=MainAppWindow}"
-                    Header="Exit" />
+                    Header="Exit"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Command="{Binding AddCommand}" Header="Add Note" />
+                <MenuItem Command="{Binding AddCommand}" Header="Add Note"/>
                 <MenuItem
                     Command="{Binding EditCommand}"
-                    CommandParameter="{Binding Project.CurrentNote}"
-                    Header="Edit Note" />
+                    CommandParameter="{Binding SelectedNote}"
+                    Header="Edit Note"/>
                 <MenuItem
                     Command="{Binding RemoveCommand}"
-                    CommandParameter="{Binding Project.CurrentNote}"
-                    Header="Delete Note" />
+                    CommandParameter="{Binding SelectedNote}"
+                    Header="Delete Note"/>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Command="{Binding AboutWindowCommand}" Header="About" />
+                <MenuItem Command="{Binding AboutWindowCommand}" Header="About"/>
             </MenuItem>
         </Menu>
         <TextBox
@@ -77,27 +80,27 @@
             Grid.RowSpan="2"
             Grid.Column="1"
             Margin="10"
-            DataContext="{Binding Project.CurrentNote}"
+            DataContext="{Binding SelectedNote}"
             IsReadOnly="True"
             Text="{Binding Text}"
             TextWrapping="WrapWithOverflow"
-            VerticalScrollBarVisibility="Visible" />
+            VerticalScrollBarVisibility="Visible"/>
         <DockPanel
             Grid.Row="1"
             Grid.Column="0"
-            Margin="10,0,0,0">
+            Margin="10 0 0 0">
             <Label
-                Margin="0,9,3,5"
+                Margin="0 10 0 5"
                 Background="Transparent"
                 FontSize="11">
                 Show Category:
             </Label>
             <ComboBox
                 Width="Auto"
-                Margin="0,6,0,2"
+                Margin="0 5 0 5"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding NoteCategories}"
-                SelectedItem="{Binding SelectedCategory}" />
+                SelectedItem="{Binding SelectedCategory}"/>
         </DockPanel>
         <ListBox
             x:Name="NotesListBox"
@@ -105,69 +108,67 @@
             Grid.Row="2"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Margin="10,0,0,0"
+            Margin="10 0 0 0"
             ItemsSource="{Binding Path=SelectedNotes}"
-            SelectedItem="{Binding Path=Project.CurrentNote}">
+            SelectedItem="{Binding Path=SelectedNote}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=Name}" />
+                    <TextBlock Text="{Binding Path=Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel
             Grid.Row="5"
             Grid.Column="0"
-            Margin="10,0,0,10"
+            Margin="10 0 0 10"
             VerticalAlignment="Bottom"
             Orientation="Horizontal">
             <Button
                 Command="{Binding AddCommand}"
                 Content="{StaticResource Add}"
                 Cursor="Hand"
-                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
             <Button
                 Command="{Binding EditCommand}"
-                CommandParameter="{Binding Project.CurrentNote}"
+                CommandParameter="{Binding SelectedNote}"
                 Content="{StaticResource Edit}"
                 Cursor="Hand"
-                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
             <Button
                 Command="{Binding RemoveCommand}"
-                CommandParameter="{Binding Project.CurrentNote}"
+                CommandParameter="{Binding SelectedNote}"
                 Content="{StaticResource Remove}"
                 Cursor="Hand"
-                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
         </StackPanel>
         <Label
             Grid.Row="1"
             Grid.Column="1"
-            Margin="20,0,0,0"
+            Margin="20 0 0 0"
             VerticalAlignment="Bottom"
             Content="{Binding Name}"
-            DataContext="{Binding Project.CurrentNote}"
+            DataContext="{Binding SelectedNote}"
             FontSize="26"
-            FontWeight="DemiBold" />
+            FontWeight="DemiBold"/>
         <DockPanel
             Grid.Row="2"
             Grid.Column="1"
-            Margin="10,0,0,0">
+            Margin="10 0 0 0">
             <Label FontSize="12">Category:</Label>
             <Label
                 Content="{Binding Category}"
-                DataContext="{Binding Project.CurrentNote}"
-                FontSize="12" />
+                DataContext="{Binding SelectedNote}"
+                FontSize="12"/>
         </DockPanel>
         <StackPanel
             Grid.Row="3"
             Grid.Column="1"
-            Margin="10,0,0,0"
+            Margin="10 0 0 0"
             Orientation="Horizontal">
             <Label>Created:</Label>
-            <TextBlock Margin="0,5,30,0" Text="{Binding Project.CurrentNote.CreatedDate,
-                Mode=OneWay, Converter={StaticResource DateConverter}}" />
+            <TextBlock Margin="0 5 30 0" Text="{Binding SelectedNote.CreatedDate, Mode=OneWay, Converter={StaticResource DateConverter}}"/>
             <Label>Modified:</Label>
-            <TextBlock Margin="0,5,30,0" Text="{Binding Project.CurrentNote.ModifiedDate,
-                Converter={StaticResource DateConverter}}" />
+            <TextBlock Margin="0 5 30 0" Text="{Binding SelectedNote.ModifiedDate, Converter={StaticResource DateConverter}}"/>
         </StackPanel>
     </Grid>
 </Window>

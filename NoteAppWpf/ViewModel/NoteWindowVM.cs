@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using NoteApp;
-using NoteApp.Properties;
 using NoteAppWpf.Services.MessageBoxServices;
 using NoteAppWpf.Services.WindowServices;
 
@@ -16,8 +14,10 @@ namespace NoteAppWpf.ViewModel
     /// <summary>
     /// VM окна редактирования заметки
     /// </summary>
-    public class NoteWindowVM : ViewModelBase,INotifyDataErrorInfo,INotifyPropertyChanged
+    public class NoteWindowVM : ViewModelBase,INotifyDataErrorInfo
     {
+        #region Поля
+
         /// <summary>
         /// Словарь для хранения ошибок проверки свойств 
         /// </summary>
@@ -25,6 +25,23 @@ namespace NoteAppWpf.ViewModel
             new Dictionary<string, List<string>>();
 
         private Note _note;
+
+        private string _newNoteTitle;
+
+        private readonly List<NoteCategory> _noteCategories =
+            Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
+
+        private readonly IMessageBoxServise _messageBoxServise;
+
+        private readonly IWindowServise _windowServise;
+
+        private ICommand _cancelCommand = null;
+
+        private RelayCommand _okCommand = null;
+
+        #endregion
+
+        #region Свойства
 
         /// <summary>
         /// Поле для хранения результата диалогового окна
@@ -36,7 +53,6 @@ namespace NoteAppWpf.ViewModel
         /// </summary>
         public Note Note { get; set; }
 
-        private string _newNoteTitle;
         /// <summary>
         /// Свойство для нового имени заметки
         /// </summary>
@@ -47,15 +63,11 @@ namespace NoteAppWpf.ViewModel
             {
                 if (_newNoteTitle != value)
                 {
-                    _newNoteTitle = value;
+                    Set(ref _newNoteTitle, value);
                     ValidateNoteName();
-                    OnPropertyChanged(nameof(NewNoteTitle));
                 }
             }
         }
-
-        private readonly List<NoteCategory> _noteCategories = 
-            Enum.GetValues(typeof(NoteCategory)).Cast<NoteCategory>().ToList();
 
         /// <summary>
         /// Категории, доступные для выбора в качестве категории заметки
@@ -69,9 +81,20 @@ namespace NoteAppWpf.ViewModel
             }
         }
 
-        private readonly IMessageBoxServise _messageBoxServise;
+        /// <summary>
+        /// Возвращает наличие ошибок
+        /// </summary>
+        public bool HasErrors => _errorsByPropertyName.Any();
 
-        private readonly IWindowServise _windowServise;
+        #endregion
+
+        #region События
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        #endregion
+
+        #region Конструкторы
 
         public NoteWindowVM(Note note, IMessageBoxServise messageBoxServise,
             IWindowServise windowServise)
@@ -84,101 +107,9 @@ namespace NoteAppWpf.ViewModel
             ShowDialogWindow();
         }
 
-        /// <summary>
-        /// Метод для отображения диалога окна
-        /// </summary>
-        public void ShowDialogWindow()
-        {
-            bool? dialogResult = _windowServise.ShowDialog(WindowType.Note, this);
-            if (dialogResult != null)
-            {
-                DialogResult = (bool) dialogResult;
-            }
-        }
+        #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName]
-            string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private ICommand _cancelCommand = null;
-        /// <summary>
-        /// Команда для кнопки Cancel
-        /// </summary>
-        public ICommand CancelCommand
-        {
-            get
-            {
-                if (_cancelCommand == null)
-                {
-                    _cancelCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(
-                        () =>
-                        {
-                            _windowServise.SetDialogResult(false);
-                        });
-                }
-
-                return _cancelCommand;
-            }
-        }
-
-        private RelayCommand _okCommand = null;
-        /// <summary>
-        /// Команда для кнопки ОК
-        /// </summary>
-        public RelayCommand OkCommand
-        {
-            get
-            {
-                if (_okCommand == null)
-                {
-                    _okCommand = new RelayCommand(obj =>
-                    {
-                        ValidateNoteName();
-                        if (!HasErrors)
-                        {
-                            _windowServise.SetDialogResult(true);
-                        }
-                        else
-                        {
-                            _messageBoxServise.Show(
-                                "Wrong title size",
-                                "Validation Error",
-                                MyMessageBoxButton.OK,
-                                MyMessageBoxImage.Warning);
-                        }
-                    });
-                }
-                return _okCommand;
-            }
-        }
-
-        /// <summary>
-        /// Возвращает наличие ошибок
-        /// </summary>
-        public bool HasErrors => _errorsByPropertyName.Any();
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        /// <summary>
-        /// Возвращает ошибки для указанного свойства
-        /// </summary>
-        /// <param name="propertyName">Проверяемое свойство</param>
-        /// <returns></returns>
-        public IEnumerable GetErrors(string propertyName)
-        {
-            return _errorsByPropertyName.ContainsKey(propertyName) ?
-                _errorsByPropertyName[propertyName] : null;
-        }
-
-        private void OnErrorsChanged(string propertyName)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        }
+        #region Приватные методы
 
         /// <summary>
         /// Метод проверки свойства имени новой заметки
@@ -192,7 +123,7 @@ namespace NoteAppWpf.ViewModel
             }
             catch (ArgumentException)
             {
-                AddError(nameof(NewNoteTitle),"Wrong title length");
+                AddError(nameof(NewNoteTitle), "Wrong title length");
             }
         }
 
@@ -225,5 +156,93 @@ namespace NoteAppWpf.ViewModel
                 OnErrorsChanged(propertyName);
             }
         }
+
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        #region Публичные методы
+
+        /// <summary>
+        /// Метод для отображения диалога окна
+        /// </summary>
+        public void ShowDialogWindow()
+        {
+            bool? dialogResult = _windowServise.ShowDialog(WindowType.Note, this);
+            if (dialogResult != null)
+            {
+                DialogResult = (bool)dialogResult;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает ошибки для указанного свойства
+        /// </summary>
+        /// <param name="propertyName">Проверяемое свойство</param>
+        /// <returns></returns>
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return _errorsByPropertyName.ContainsKey(propertyName) ?
+                _errorsByPropertyName[propertyName] : null;
+        }
+
+        #region Команды
+
+        /// <summary>
+        /// Команда для кнопки Cancel
+        /// </summary>
+        public ICommand CancelCommand
+        {
+            get
+            {
+                if (_cancelCommand == null)
+                {
+                    _cancelCommand = new GalaSoft.MvvmLight.CommandWpf.RelayCommand(
+                        () =>
+                        {
+                            _windowServise.SetDialogResult(false);
+                        });
+                }
+
+                return _cancelCommand;
+            }
+        }
+
+        /// <summary>
+        /// Команда для кнопки ОК
+        /// </summary>
+        public RelayCommand OkCommand
+        {
+            get
+            {
+                if (_okCommand == null)
+                {
+                    _okCommand = new RelayCommand(obj =>
+                    {
+                        ValidateNoteName();
+                        if (!HasErrors)
+                        {
+                            _windowServise.SetDialogResult(true);
+                        }
+                        else
+                        {
+                            _messageBoxServise.Show(
+                                "Wrong title size",
+                                "Validation Error",
+                                MyMessageBoxButton.OK,
+                                MyMessageBoxImage.Warning);
+                        }
+                    });
+                }
+                return _okCommand;
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }
